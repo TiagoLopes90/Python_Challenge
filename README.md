@@ -6,3 +6,5 @@ Here we have used data from Profit/Loss across different years, evaluating the A
 
 ## PyPoll
 It consisted on evaluate a campaign by identifying the winner as well as the important information per candidate and of the total campaign, like number of votes.
+
+It's worthy to mention that I was not able to upload the Resources folder since the original file was above 75Mb.
