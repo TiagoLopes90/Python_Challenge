@@ -1,29 +1,38 @@
 import csv
 file_path = 'Resources/budget_data.csv'
 
-greatestIncrease = [str(0),0.0]
-greatestDecrease = [str(0),0.0]
-totalAmount = 0.0
-numberMonths = 0
-print(type(totalAmount))
+data=[]
 
 with open(file_path) as csvfile:
     csvreader = csv.reader(csvfile,delimiter=',')
-
-    #look for header
     csv_header = next(csvreader)
-
-    #Iterate over the file 
     for row in csvreader:
-        numberMonths += 1
-        totalAmount += float(row[1])
-        #Calculate Greatest Increase and Decrease
-        if float(greatestIncrease[1]) < float(row[1]):
-            greatestIncrease = row
-        if float(greatestDecrease[1]) > float(row[1]):
-            greatestDecrease = row
+        data.append(row)
 
-averageChange = totalAmount/numberMonths
+monthIncrease = data[0][0]
+monthDecrease = data[0][0]
+greatIncrease = 0.0
+greatDecrease = 0.0
+totalAmount = float(data[0][1])
+totalChange = 0.0
+monthCount = 1
+
+for i in range(1,len(data)):
+    monthCount+=1
+    totalAmount+=float(data[i][1])
+    change = float(data[i][1])-float(data[i-1][1])
+    totalChange+=change
+    if change > greatIncrease:
+        greatIncrease = change
+        monthIncrease = data[i][0]
+    if change < greatDecrease:
+        greatDecrease = change
+        monthDecrease = data[i][0]
+
+
+averageChange = float(totalChange/(monthCount-1))
+#another option for the average :averageChange2 = float((float(data[-1][1])-(float(data[0][1])))/(monthCount-1))
+
 
 #Writing TXT File
 output_file = "Analysis/output.txt"
@@ -32,13 +41,13 @@ with open (output_file,'w') as output:
 
     output.write("Financial Analysis\n")
     output.write("--------------------------------------------\n")
-    output.write(f'Total Months: {numberMonths}\n')
+    output.write(f'Total Months: {monthCount}\n')
     output.write(f'Total: {totalAmount}\n')
     output.write(f'Average Change: {round(averageChange,2)}\n')
-    output.write(f'Greatest Increase in Profits: {str(greatestIncrease[0])} (${str(greatestIncrease[1])})\n')
-    output.write(f'Greatest Decrease in Profits: {str(greatestDecrease[0])} (${str(greatestDecrease[1])})')
+    output.write(f'Greatest Increase in Profits: {monthIncrease} (${str(greatIncrease)})\n')
+    output.write(f'Greatest Decrease in Profits: {monthDecrease} (${str(greatDecrease)})')
 
 #Print at the terminal
-print(f'Financial Analysis\n--------------------------------------------\nTotal Months: {numberMonths}\nTotal: {totalAmount}\nAverage Change: {round(averageChange,2)}\nGreatest Increase in Profits: {str(greatestIncrease[0])} (${str(greatestIncrease[1])})\nGreatest Decrease in Profits: {str(greatestDecrease[0])} (${str(greatestDecrease[1])})')
+print(f'Financial Analysis\n--------------------------------------------\nTotal Months: {monthCount}\nTotal: {totalAmount}\nAverage Change: {round(averageChange,2)}\nGreatest Increase in Profits: {str(monthIncrease)} (${str(greatIncrease)})\nGreatest Decrease in Profits: {monthDecrease} (${str(greatDecrease)})')
 
 
